@@ -1,77 +1,46 @@
-def addition(INPUT_X,INPUT_Y):
-	
-	if(len(INPUT_Y)>len(INPUT_X)):
-		INPUT_X,INPUT_Y=INPUT_Y,INPUT_X
-	while(len(INPUT_X)>len(INPUT_Y)):
-		INPUT_Y.insert(0,0)
-	n=len(INPUT_X)
-	somme=[0 for i in range(0,n+1)]
-	for i in range(n-1,-1,-1):
-		if((INPUT_X[i]+INPUT_Y[i])>9 or (INPUT_X[i]+INPUT_Y[i])<0):
-			somme[i+1]=(INPUT_X[i]+INPUT_Y[i])%10
-			if(i==0):
-				somme[i]+=((INPUT_X[i]+INPUT_Y[i])//10)
-			else:
-				INPUT_X[i-1]+=((INPUT_X[i]+INPUT_Y[i])//10)
-			
-		else:
-			somme[i+1]+=INPUT_X[i]+INPUT_Y[i]
-	i=0
-	while(somme[i]==0):
-		i+=1
-	return(somme[i:])
+# Returns list_1 + list_2 as they were two big numbers
+def list_sum(list_1: list[int], list_2: list[int]) -> list[int]:
+    min_length = min(len(list_1), len(list_2))
+    list_1, list_2 = list_1[::-1], list_2[::-1]
 
-def produit(INPUT_LIST,NUMBER):
-	INPUT_LENGTH=len(INPUT_LIST)
-	
-	RESULT=[0 for i in range(0,INPUT_LENGTH+1)]
-	for i in range(INPUT_LENGTH-1,-1,-1):
-		if((RESULT[i+1]+INPUT_LIST[i]*NUMBER)>9):
-			RESULT[i]+=((RESULT[i+1]+INPUT_LIST[i]*NUMBER)//10)
-			RESULT[i+1]=(RESULT[i+1]+INPUT_LIST[i]*NUMBER)%10
-			
-			
-		
-		else:
-			RESULT[i+1]+=INPUT_LIST[i]*NUMBER
-	if(RESULT[0]==0):
-		return RESULT[1:]
-	else:
-		return RESULT
+    # common part
+    result = [e_1 + e_2 for e_1, e_2 in zip(list_1[:min_length - 1], list_2[:min_length - 1])]
+    result += list_1[min_length:] if min_length == len(list_1) else list_2[min_length:]
+    return list_times_number(result[::-1], 1)
 
 
+# Returns a list of elements of input_list times number
+def list_times_number(input_list: list[int], number: int) -> list[int]:
+    result = [element * number for element in input_list[::-1]]
+    for index, element in enumerate(result[:-1]):
+        if element >= 10:
+            result[index + 1] += element // 10
+            result[index] = element % 10
 
-def multiplication(INPUT_1,INPUT_2):
-	RESULT=[]
-	Z_NUMBER=0
-	for i in range (len(INPUT_2)-1,-1,-1):
-
-		PRODUCT=produit(INPUT_1,INPUT_2[i])
-		for k in range (0,Z_NUMBER):
-			PRODUCT.append(0)
-		Z_NUMBER+=1
-		RESULT=addition(RESULT,PRODUCT)
-	return RESULT
+    return result[::-1]
 
 
+# Returns list_1 * list_2 as they were two big numbers
+def list_times_list(list_1: list[int], list_2: list[int]) -> list[int]:
+    result = []
+    for index, element in enumerate(list_2[::-1]):
+        list_1_times_element = list_times_number(list_1, element) + [0] * index
+        result = list_sum(result, list_1_times_element)
+    return result
 
 
-def ToString(liste):
-	chaine=""
-	for e in liste:
-		chaine+=str(e) 
-	return chaine
+# Converts an integers list into a string
+def list_to_string(input_list: list[int]) -> str:
+    return ' '.join([str(d) for d in input_list])
 
 
-def ToList(string):
-	L=[int(i) for i in string]
-	return L
-
-FIRST="31112"
-SECOND="271828"
-LIST_X=ToList(FIRST)
-LIST_Y=ToList(SECOND)
-res=multiplication(LIST_Y,LIST_X)
-print(ToString(res))
+# Converts a string into list of digits(integers)
+def string_to_list(input_string):
+    return [int(d) for d in input_string]
 
 
+# Main program
+
+first, second = '31112', '271828'
+first_list, second_list = string_to_list(first), string_to_list(second)
+print(f'{first} * {second} = {list_times_list(first_list, second_list)}')
