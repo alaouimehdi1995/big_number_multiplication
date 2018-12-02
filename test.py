@@ -1,4 +1,4 @@
-from program import (
+from core import (
     list_sum,
     list_times_list,
     list_times_number,

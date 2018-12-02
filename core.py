@@ -1,5 +1,7 @@
+from typing import List
+
 # Returns list_1 + list_2 as they were two big numbers
-def list_sum(list_1: list, list_2: list) -> list:
+def list_sum(list_1: List[int], list_2: List[int]) -> List[int]:
     list_1, list_2 = list_1[::-1], list_2[::-1]
     list_1, list_2 = (list_1, list_2) if len(list_1) >= len(list_2) else (list_2, list_1)
     result = [
@@ -9,7 +11,7 @@ def list_sum(list_1: list, list_2: list) -> list:
 
 
 # Returns a list of elements of input_list times number
-def list_times_number(input_list: list, number: int) -> list:
+def list_times_number(input_list: List[int], number: int) -> List[int]:
     result = [element * number for element in input_list[::-1]]
     increment_number = 0
     for index, element in enumerate(result):
@@ -23,7 +25,7 @@ def list_times_number(input_list: list, number: int) -> list:
 
 
 # Returns list_1 * list_2 as they were two big numbers
-def list_times_list(list_1: list, list_2: list) -> list:
+def list_times_list(list_1: List[int], list_2: List[int]) -> List[int]:
     for index, element in enumerate(list_2[::-1]):
         list_1_times_element = list_times_number(list_1, element) + [0] * index
         result = list_1_times_element if index == 0 else list_sum(result, list_1_times_element)
@@ -31,7 +33,7 @@ def list_times_list(list_1: list, list_2: list) -> list:
 
 
 # Converts an integers list into a string
-def list_to_string(input_list: list) -> str:
+def list_to_string(input_list: List[int]) -> str:
     return ''.join([str(d) for d in input_list])
 
 
